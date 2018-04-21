@@ -13,6 +13,7 @@ public class Manager : MonoBehaviour {
     Text[] theText;
     GameObject goLives;
     GameObject goScore;
+    Text centerText;
     int score=0;
     int lives=3;
     int prevH;
@@ -22,13 +23,14 @@ public class Manager : MonoBehaviour {
     static float numWords = 4;
     public static int level;
 
-    public enum Phases {BALL_ATTACHED, BALL_MOVING, PAUSED};
+    public enum Phases {BALL_ATTACHED, BALL_MOVING, PAUSED, LEVEL_COMPLETE};
     public Phases currentPhase = new Phases();
+    public Phases prevPhase = new Phases();
 
 	// Use this for initialization
 	void Start () {
 
-        level = 3;
+        level = 1; 
         currentPhase = Phases.BALL_ATTACHED;
         prevH = Camera.main.pixelHeight;
         prevW = Camera.main.pixelWidth;
@@ -38,6 +40,9 @@ public class Manager : MonoBehaviour {
         goLives = GameObject.Find("Lives");
         goScore = GameObject.Find("Score");
         theBlockGrid = GameObject.Find("BlockGrid");
+        centerText = GameObject.Find("CenterText").GetComponent<Text>();
+
+        centerText.text = "";
 
         theInput = thePaddle.GetComponentInChildren<InputField>();
         textGrid.GetComponent<GridLayoutGroup>().cellSize = new Vector2(Camera.main.pixelWidth / numWords, Camera.main.pixelHeight / 12f);
@@ -64,8 +69,31 @@ public class Manager : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            if (currentPhase == Phases.PAUSED) {
+                currentPhase = prevPhase;
+                centerText.text = "";
+                activateInput(true);
+                return;
+            }
+            prevPhase = currentPhase;
+            currentPhase = Phases.PAUSED;
+            centerText.text = "Paused";
+            activateInput(false);
+            return;
+        }
 
-        activateInput(true);
+        if(currentPhase == Phases.LEVEL_COMPLETE) {
+            if (Input.GetKeyDown(KeyCode.Space)){
+                theBlockGrid.GetComponent<Grid>().setup();
+                centerText.text = "";
+                currentPhase = Phases.BALL_ATTACHED;
+                activateInput(true);
+            }
+            return;
+        }
+
+        theInput.ActivateInputField();
 
         if (prevH != Camera.main.pixelHeight || prevW != Camera.main.pixelWidth || sizeFlag == true) {
             prevH = Camera.main.pixelHeight;
@@ -81,7 +109,7 @@ public class Manager : MonoBehaviour {
             sizeFlag = false;
         }
 
-
+        levelUp();
         movePaddle();
 
 
@@ -126,6 +154,13 @@ public class Manager : MonoBehaviour {
             input = null;
             return;
         }
+        if (input.ToLower().Equals("win")) {
+            for (int i = 0; i < theBlockGrid.transform.childCount; i++) {
+                Destroy(theBlockGrid.transform.GetChild(i).gameObject);
+            }
+            theInput.text = "";
+            return;
+        }
 
         //for they typed the wrong thing!
         input = null;
@@ -160,9 +195,16 @@ public class Manager : MonoBehaviour {
     }
 
     public void levelUp() {
-        if (theBlockGrid.transform.childCount == 0) { 
-            level = level + 1;
+        if (theBlockGrid.transform.childCount != 0) {
+            return;
         }
+        level = level + 1;
+        if (level > 3) {
+            level = 1;
+        }
+        centerText.text="Level Complete \n Press Space To Continue...";
+        currentPhase = Phases.LEVEL_COMPLETE;
+        activateInput(false);
     }
 
     public static float unitsPerPixel() {
@@ -179,18 +221,17 @@ public class Manager : MonoBehaviour {
     public static int[] loadLevelLayout() {
         int[] cols=null;
         if (level == 1) {
-            cols = new int[4];
-            cols[0] = 5;
-            cols[1] = 5;
-            cols[2] = 5;
-            cols[3] = 5;
+            cols = new int[3];
+            cols[0] = 4;
+            cols[1] = 4;
+            cols[2] = 4;
         }
         if (level == 2) {
             cols = new int[4];
-            cols[0] = 6;
-            cols[1] = 6;
+            cols[0] = 4;
+            cols[1] = 4;
             cols[2] = 2;
-            cols[3] = 6;
+            cols[3] = 3;
         }
         if (level == 3) {
             cols = new int[5];

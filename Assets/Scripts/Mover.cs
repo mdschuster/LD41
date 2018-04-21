@@ -48,7 +48,7 @@ public class Mover : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        if (theManager.currentPhase == Manager.Phases.PAUSED || theManager.currentPhase == Manager.Phases.BALL_ATTACHED) {
+        if (theManager.currentPhase != Manager.Phases.BALL_MOVING) {
             return;
         }
         move();
@@ -97,6 +97,10 @@ public class Mover : MonoBehaviour {
 
     //FIXME something is still up with the collisions and bound checks
     void OnCollisionEnter(Collision other) {
+        if(theManager.currentPhase != Manager.Phases.BALL_MOVING) {
+            return;
+        }
+
         vel = Vector3.Reflect(vel, -other.contacts[0].normal);
         Vector3 pos = this.transform.position;
         //pos += other.contacts[0].normal*shift;
@@ -105,7 +109,18 @@ public class Mover : MonoBehaviour {
         Vector3 addVel = other.gameObject.GetComponent<VelocityModifier>().addVel();
         vel = vel.normalized * speed * velMod + addVel;
 
-        if(vel.normalized.magnitude<speed) {
+        if (Mathf.Abs(vel.normalized.y) < 0.1) {
+            //kick it!
+            vel.y *= 10f;
+            vel = vel.normalized * speed;
+        } else if (Mathf.Abs(vel.normalized.x) < 0.1) {
+            //kick it!
+            vel.x *= 10f;
+            vel = vel.normalized * speed;
+        }
+
+        //don't go over max speed
+        if (vel.normalized.magnitude<speed) {
             vel = vel.normalized * speed;
         }
 

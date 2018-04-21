@@ -53,7 +53,7 @@ public class Grid : MonoBehaviour {
         }
         int count = 0;
         for (int j = 0; j < rows; j++) {
-            float colWidth = Camera.main.pixelWidth / (cols[j] * 1.0f + 6f);
+            float colWidth = Camera.main.pixelWidth / (cols[j] * 1.0f + cols[j]/2f);
             blockScale.x = colWidth * Manager.unitsPerPixel() / 1.5f;
             for (int i = 0; i < cols[j]; i++) {
                 GameObject theBlock = blocks[count];

@@ -7,16 +7,21 @@ public class PaddleMover : MonoBehaviour, VelocityModifier {
     public bool isAnimating;
     Vector3 targetPosition;
     public Vector3 vel = Vector3.zero;
+    Manager theManager;
     float speed;
 
 	// Use this for initialization
 	void Start () {
         speed = 15f;
         targetPosition = this.transform.position;
+        theManager = Camera.main.GetComponent<Manager>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        if (theManager.currentPhase == Manager.Phases.PAUSED) {
+            return;
+        }
         if (isAnimating) {
             Vector3 pos = this.transform.position;
             Vector3 dir = targetPosition - pos;
