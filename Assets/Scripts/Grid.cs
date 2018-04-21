@@ -5,19 +5,18 @@ using UnityEngine;
 public class Grid : MonoBehaviour {
 
     GameObject[] blocks;
+    public GameObject blockPrefab;
     int numBlocks;
     int cols=6;
     int rows=1;
 
-	// Use this for initialization
-	void Start () {
-        numBlocks = this.transform.childCount;
-        blocks = new GameObject[numBlocks];
-        for (int i = 0; i < numBlocks; i++) {
-            blocks[i] = this.transform.GetChild(i).gameObject;
-        }
+    // Use this for initialization
+    void Start () {
 
-        arrange();
+        setup();
+
+
+
 
 	}
 	
@@ -25,6 +24,22 @@ public class Grid : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public void setup() {
+
+        for (int i = 0; i < cols*rows; i++) {
+            GameObject temp = Instantiate(blockPrefab);
+            temp.transform.parent = this.transform;
+        }
+
+        numBlocks = this.transform.childCount;
+        blocks = new GameObject[numBlocks];
+        for (int i = 0; i < numBlocks; i++) {
+            blocks[i] = this.transform.GetChild(i).gameObject;
+        }
+
+        arrange();
+    }
 
     public void arrange() {
         float colWidth = Camera.main.pixelWidth / (cols*1.0f+6f);
@@ -45,4 +60,24 @@ public class Grid : MonoBehaviour {
     }
 
 
+
+    public int Cols {
+        get {
+            return cols;
+        }
+
+        set {
+            cols = value;
+        }
+    }
+
+    public int Rows {
+        get {
+            return rows;
+        }
+
+        set {
+            rows = value;
+        }
+    }
 }
