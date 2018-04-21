@@ -12,7 +12,8 @@ public class Manager : MonoBehaviour {
     int prevH;
     int prevW;
     bool sizeFlag = true;
-    string input=null;
+    string input = null;
+    static float numWords = 4;
 
     public enum Phases {BALL_ATTACHED, BALL_MOVING, PAUSED};
     public Phases currentPhase = new Phases();
@@ -26,17 +27,16 @@ public class Manager : MonoBehaviour {
         textGrid = GameObject.Find("TextGrid");
         thePaddle = GameObject.Find("Paddle");
         theInput = thePaddle.GetComponentInChildren<InputField>();
-        textGrid.GetComponent<GridLayoutGroup>().cellSize = new Vector2(Camera.main.pixelWidth / 6f, Camera.main.pixelHeight / 12f);
+        textGrid.GetComponent<GridLayoutGroup>().cellSize = new Vector2(Camera.main.pixelWidth / numWords, Camera.main.pixelHeight / 12f);
         theText = textGrid.GetComponentsInChildren<Text>();
         theText[0].text = "Zero";
         theText[1].text = "One";
         theText[2].text = "Two";
         theText[3].text = "Three";
-        theText[4].text = "Four";
-        theText[5].text = "Five";
 
 
-        float screenWidth=Camera.main.pixelWidth / 6f;
+
+        float screenWidth=Camera.main.pixelWidth / numWords;
         Vector3 paddleScale = thePaddle.transform.localScale;
         paddleScale.x = screenWidth * unitsPerPixel();
         thePaddle.transform.localScale = paddleScale;
@@ -53,10 +53,10 @@ public class Manager : MonoBehaviour {
             prevH = Camera.main.pixelHeight;
             prevW = Camera.main.pixelWidth;
             //change the text grid to still be proportional to the screensize
-            textGrid.GetComponent<GridLayoutGroup>().cellSize = new Vector2(Camera.main.pixelWidth / 6f, Camera.main.pixelHeight / 12f);
+            textGrid.GetComponent<GridLayoutGroup>().cellSize = new Vector2(Camera.main.pixelWidth / numWords, Camera.main.pixelHeight / 12f);
 
             //change paddle size
-            float screenWidth = Camera.main.pixelWidth / 6f;
+            float screenWidth = Camera.main.pixelWidth / numWords;
             Vector3 paddleScale = thePaddle.transform.localScale;
             paddleScale.x = screenWidth * unitsPerPixel();
             thePaddle.transform.localScale = paddleScale;
@@ -75,8 +75,10 @@ public class Manager : MonoBehaviour {
             return;
         }
         for (int i = 0; i < theText.Length; i++) {
-            if (input.Equals(theText[i].text)) {
-                positionPaddle(i);
+            if (input.ToLower().Equals(theText[i].text.ToLower())) {
+                Vector3 pos = positionPaddle(i);
+                thePaddle.GetComponent<PaddleMover>().updateTargetPosition(pos);
+
                 input = null;
                 return;
             }
@@ -86,11 +88,12 @@ public class Manager : MonoBehaviour {
 
     }
 
-    public void positionPaddle(int num) {
+    public Vector3 positionPaddle(int num) {
         Vector3 pos = thePaddle.transform.position;
-        //the num-3 assumes 6 words
-        pos.x = (num-3)*Camera.main.pixelWidth / 6f * unitsPerPixel() + thePaddle.transform.localScale.x / 2f;
-        thePaddle.transform.position = pos;
+        //the num-* assumes 6 words
+        pos.x = (num-numWords/2f)*Camera.main.pixelWidth / numWords * unitsPerPixel() + thePaddle.transform.localScale.x / 2f;
+        //thePaddle.transform.position = pos;
+        return pos;
     }
 
 

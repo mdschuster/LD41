@@ -86,9 +86,9 @@ public class Mover : MonoBehaviour {
     void OnTriggerEnter(Collider other) {
         Debug.Log("Hit");
         vel.y = -vel.y;
-        vel.x = -vel.x;
+        vel.x = vel.x;
         if (other == thePaddle.GetComponent<Collider>()) {
-            theManager.currentPhase = Manager.Phases.BALL_ATTACHED;
+            //theManager.currentPhase = Manager.Phases.BALL_ATTACHED;
         }
     }
 }
