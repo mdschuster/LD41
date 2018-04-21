@@ -12,6 +12,7 @@ public class Manager : MonoBehaviour {
     int prevH;
     int prevW;
     bool sizeFlag = true;
+    string input=null;
 
     public enum Phases {BALL_ATTACHED, BALL_MOVING, PAUSED};
     public Phases currentPhase = new Phases();
@@ -63,6 +64,25 @@ public class Manager : MonoBehaviour {
         }
 
 
+        movePaddle();
+
+
+
+    }
+
+    public void movePaddle() {
+        if (input == null) {
+            return;
+        }
+        for (int i = 0; i < theText.Length; i++) {
+            if (input.Equals(theText[i].text)) {
+                positionPaddle(i);
+                input = null;
+                return;
+            }
+        }
+        //for they typed the wrong thing!
+        input = null;
 
     }
 
@@ -72,6 +92,13 @@ public class Manager : MonoBehaviour {
         pos.x = (num-3)*Camera.main.pixelWidth / 6f * unitsPerPixel() + thePaddle.transform.localScale.x / 2f;
         thePaddle.transform.position = pos;
     }
+
+
+    public void readInput(InputField input) {
+        this.input = input.text;
+    }
+
+
 
 
     public static float unitsPerPixel() {
