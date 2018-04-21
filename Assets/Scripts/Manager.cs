@@ -84,7 +84,7 @@ public class Manager : MonoBehaviour {
         }
 
         if(currentPhase == Phases.LEVEL_COMPLETE) {
-            if (Input.GetKeyDown(KeyCode.Space)){
+            if (Input.GetKeyUp(KeyCode.Space)){
                 theBlockGrid.GetComponent<Grid>().setup();
                 centerText.text = "";
                 currentPhase = Phases.BALL_ATTACHED;
@@ -204,6 +204,8 @@ public class Manager : MonoBehaviour {
         }
         centerText.text="Level Complete \n Press Space To Continue...";
         currentPhase = Phases.LEVEL_COMPLETE;
+        theBall.GetComponentInChildren<ParticleSystem>().Stop();
+        theBall.GetComponent<Mover>().vel = Vector3.zero;
         activateInput(false);
     }
 

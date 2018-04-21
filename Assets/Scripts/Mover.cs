@@ -39,6 +39,7 @@ public class Mover : MonoBehaviour {
                 }
                 theManager.currentPhase = Manager.Phases.BALL_MOVING;
                 theManager.activateInput(true);
+                this.GetComponentInChildren<ParticleSystem>().Play();
             }
 
             return;
@@ -49,6 +50,7 @@ public class Mover : MonoBehaviour {
 
     void FixedUpdate() {
         if (theManager.currentPhase != Manager.Phases.BALL_MOVING) {
+            this.GetComponent<Rigidbody>().velocity = Vector3.zero;
             return;
         }
         move();
@@ -59,12 +61,13 @@ public class Mover : MonoBehaviour {
         Vector2 newPos = new Vector2(0f, 0f);
         //checkBoundry(pos);
         vel = vel.normalized * speed;
+        this.GetComponent<Rigidbody>().velocity = vel;
         //x
         newPos.x = pos.x + vel.x * Time.deltaTime;
         //y
         newPos.y = pos.y + vel.y * Time.deltaTime;
 
-        this.transform.position = newPos;
+        //this.transform.position = newPos;
     }
 
     //private void checkBoundry(Vector2 myPos) {
@@ -140,6 +143,7 @@ public class Mover : MonoBehaviour {
                 Debug.Log("Game Over Man");
             }
             theManager.currentPhase = Manager.Phases.BALL_ATTACHED;
+            this.GetComponentInChildren<ParticleSystem>().Stop();
         }
     }
 
