@@ -10,6 +10,10 @@ public class Manager : MonoBehaviour {
     InputField theInput;
     GameObject theBall;
     Text[] theText;
+    GameObject goLives;
+    GameObject goScore;
+    int score=0;
+    int lives=3;
     int prevH;
     int prevW;
     bool sizeFlag = true;
@@ -28,6 +32,9 @@ public class Manager : MonoBehaviour {
         textGrid = GameObject.Find("TextGrid");
         thePaddle = GameObject.Find("Paddle");
         theBall = GameObject.Find("Ball");
+        goLives = GameObject.Find("Lives");
+        goScore = GameObject.Find("Score");
+
         theInput = thePaddle.GetComponentInChildren<InputField>();
         textGrid.GetComponent<GridLayoutGroup>().cellSize = new Vector2(Camera.main.pixelWidth / numWords, Camera.main.pixelHeight / 12f);
         theText = textGrid.GetComponentsInChildren<Text>();
@@ -44,12 +51,16 @@ public class Manager : MonoBehaviour {
         thePaddle.transform.localScale = paddleScale;
 
         positionPaddle(3);
-    }
-	
-	// Update is called once per frame
-	void Update () {
 
-        theInput.ActivateInputField();
+        goLives.GetComponent<Text>().text = "Lives: " + lives;
+        goScore.GetComponent<Text>().text = "Score: " + score;
+
+    }
+
+    // Update is called once per frame
+    void Update () {
+
+        activateInput(true);
 
         if (prevH != Camera.main.pixelHeight || prevW != Camera.main.pixelWidth || sizeFlag == true) {
             prevH = Camera.main.pixelHeight;
@@ -72,10 +83,21 @@ public class Manager : MonoBehaviour {
 
     }
 
+    public void activateInput(bool state) {
+        if (state == true) {
+            theInput.ActivateInputField();
+            theInput.interactable = true;
+        } else {
+            theInput.DeactivateInputField();
+            theInput.interactable = false;
+        }
+    }
+
     public void movePaddle() {
         if (input == null || input=="") {
             return;
         }
+        input = input.Trim();
         for (int i = 0; i < theText.Length; i++) {
             if (input.ToLower().Equals(theText[i].text.ToLower())) {
                 Vector3 pos = positionPaddle(i);
@@ -118,6 +140,19 @@ public class Manager : MonoBehaviour {
         this.input = input.text;
     }
 
+    public void updateScore(int num) {
+        score += num;
+        goScore.GetComponent<Text>().text = "Score: " + score;
+    }
+
+    public void updateLives(int num) {
+        lives += num;
+        goLives.GetComponent<Text>().text = "Lives: " + lives;
+    }
+
+    public int getLives() {
+        return lives;
+    }
 
 
 

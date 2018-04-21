@@ -12,7 +12,7 @@ public class Mover : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-        speed = 5f;
+        speed = 7f;
         vel = new Vector3(1f, 1f,0f).normalized * speed;
         theManager = Camera.main.GetComponent<Manager>();
         thePaddle = GameObject.Find("Paddle");
@@ -22,6 +22,7 @@ public class Mover : MonoBehaviour {
     void Update() {
 
         if (theManager.currentPhase == Manager.Phases.BALL_ATTACHED) {
+            //theManager.activateInput(false);
             //stay attached to the center of the paddle
             Vector3 pos = this.transform.position;
             pos = thePaddle.transform.position;
@@ -31,13 +32,14 @@ public class Mover : MonoBehaviour {
 
             if(Input.GetKeyDown(KeyCode.Space)) {
                 //release ball
-                int num = Random.Range(0, 1);
+                int num = Random.Range(0, 2);
                 if (num == 0) {
                     vel= new Vector3(1f, 1f, 0f).normalized * speed;
                 } else {
                     vel = new Vector3(-1f, 1f, 0f).normalized * speed;
                 }
                 theManager.currentPhase = Manager.Phases.BALL_MOVING;
+                theManager.activateInput(true);
             }
 
             return;
@@ -109,8 +111,8 @@ public class Mover : MonoBehaviour {
         }
 
         this.transform.position = pos;
-        if (!other.gameObject.Equals(thePaddle) && other.gameObject.tag!="Boundry") { 
-            //TODO increase score
+        if (!other.gameObject.Equals(thePaddle) && other.gameObject.tag!="Boundry") {
+            theManager.updateScore(1);
             Destroy(other.gameObject);
         }
         if (other.gameObject.Equals(thePaddle)) {
@@ -118,7 +120,9 @@ public class Mover : MonoBehaviour {
         }
         if (other.gameObject.Equals(GameObject.Find("Bottom"))) {
             //TODO implement death
+            theManager.updateLives(-1);
             Debug.Log("killed");
+            theManager.currentPhase = Manager.Phases.BALL_ATTACHED;
         }
     }
 
