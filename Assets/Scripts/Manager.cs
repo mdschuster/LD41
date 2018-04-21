@@ -6,15 +6,21 @@ public class Manager : MonoBehaviour {
      
     //for text grid
     GameObject textGrid;
-    GameObject Paddle;
+    GameObject thePaddle;
     Text[] theText;
     int prevH;
     int prevW;
 
+    public enum Phases {BALL_ATTACHED, BALL_MOVING, PAUSED};
+    public Phases currentPhase = new Phases();
+
 	// Use this for initialization
 	void Start () {
+
+        currentPhase = Phases.BALL_MOVING;
+
         textGrid = GameObject.Find("TextGrid");
-        Paddle = GameObject.Find("Paddle");
+        thePaddle = GameObject.Find("Paddle");
         textGrid.GetComponent<GridLayoutGroup>().cellSize = new Vector2(Camera.main.pixelWidth / 6f, Camera.main.pixelHeight / 12f);
         theText = textGrid.GetComponentsInChildren<Text>();
         theText[0].text = "Zero";
@@ -26,27 +32,38 @@ public class Manager : MonoBehaviour {
 
 
         float screenWidth=Camera.main.pixelWidth / 6f;
-        Vector3 paddleScale = Paddle.transform.localScale;
+        Vector3 paddleScale = thePaddle.transform.localScale;
         paddleScale.x = screenWidth * unitsPerPixel();
-        Paddle.transform.localScale = paddleScale;
+        thePaddle.transform.localScale = paddleScale;
+
+        positionPaddle(5);
     }
 	
 	// Update is called once per frame
 	void Update () {
         
         if (prevH != Camera.main.pixelHeight || prevW != Camera.main.pixelWidth) {
+            prevH = Camera.main.pixelHeight;
+            prevW = Camera.main.pixelWidth;
             //change the text grid to still be proportional to the screensize
             textGrid.GetComponent<GridLayoutGroup>().cellSize = new Vector2(Camera.main.pixelWidth / 6f, Camera.main.pixelHeight / 12f);
 
             //change paddle size
             float screenWidth = Camera.main.pixelWidth / 6f;
-            Vector3 paddleScale = Paddle.transform.localScale;
+            Vector3 paddleScale = thePaddle.transform.localScale;
             paddleScale.x = screenWidth * unitsPerPixel();
-            Paddle.transform.localScale = paddleScale;
+            thePaddle.transform.localScale = paddleScale;
         }
 
 
 
+    }
+
+    public void positionPaddle(int num) {
+        Vector3 pos = thePaddle.transform.position;
+        //the num-3 assumes 6 words
+        pos.x = (num-3)*Camera.main.pixelWidth / 6f * unitsPerPixel() + thePaddle.transform.localScale.x / 2f;
+        thePaddle.transform.position = pos;
     }
 
 
