@@ -7,9 +7,11 @@ public class Manager : MonoBehaviour {
     //for text grid
     GameObject textGrid;
     GameObject thePaddle;
+    InputField theInput;
     Text[] theText;
     int prevH;
     int prevW;
+    bool sizeFlag = true;
 
     public enum Phases {BALL_ATTACHED, BALL_MOVING, PAUSED};
     public Phases currentPhase = new Phases();
@@ -18,9 +20,11 @@ public class Manager : MonoBehaviour {
 	void Start () {
 
         currentPhase = Phases.BALL_MOVING;
-
+        prevH = Camera.main.pixelHeight;
+        prevW = Camera.main.pixelWidth;
         textGrid = GameObject.Find("TextGrid");
         thePaddle = GameObject.Find("Paddle");
+        theInput = thePaddle.GetComponentInChildren<InputField>();
         textGrid.GetComponent<GridLayoutGroup>().cellSize = new Vector2(Camera.main.pixelWidth / 6f, Camera.main.pixelHeight / 12f);
         theText = textGrid.GetComponentsInChildren<Text>();
         theText[0].text = "Zero";
@@ -36,13 +40,15 @@ public class Manager : MonoBehaviour {
         paddleScale.x = screenWidth * unitsPerPixel();
         thePaddle.transform.localScale = paddleScale;
 
-        positionPaddle(5);
+        positionPaddle(3);
     }
 	
 	// Update is called once per frame
 	void Update () {
-        
-        if (prevH != Camera.main.pixelHeight || prevW != Camera.main.pixelWidth) {
+
+        theInput.ActivateInputField();
+
+        if (prevH != Camera.main.pixelHeight || prevW != Camera.main.pixelWidth || sizeFlag == true) {
             prevH = Camera.main.pixelHeight;
             prevW = Camera.main.pixelWidth;
             //change the text grid to still be proportional to the screensize
@@ -53,6 +59,7 @@ public class Manager : MonoBehaviour {
             Vector3 paddleScale = thePaddle.transform.localScale;
             paddleScale.x = screenWidth * unitsPerPixel();
             thePaddle.transform.localScale = paddleScale;
+            sizeFlag = false;
         }
 
 

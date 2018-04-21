@@ -56,18 +56,15 @@ public class Mover : MonoBehaviour {
 
     private void checkBoundry(Vector2 myPos) {
 
-        //TODO: Ball moves halfway out of screen, fix to have ball appear to hit
-        //the boundry at edge
-
         //Debug.Log(pixScale+" "+myPos);
         Vector2 pos = Camera.main.WorldToScreenPoint(myPos);
         if (pos.y < 0+110) {
             vel.y = -vel.y;
-        } else if (pos.y > Camera.main.pixelHeight - 10) {
+        } else if (pos.y > Camera.main.pixelHeight - this.transform.localScale.y/2f*Manager.pixelsPerUnit()) {
             vel.y = -vel.y;
-        } else if (pos.x < 0+10) {
+        } else if (pos.x < 0+ this.transform.localScale.y / 2f * Manager.pixelsPerUnit()) {
             vel.x = -vel.x;
-        } else if (pos.x > Camera.main.pixelWidth - 10) {
+        } else if (pos.x > Camera.main.pixelWidth - this.transform.localScale.x/2f * Manager.pixelsPerUnit()) {
             vel.x = -vel.x;
         }
     }
