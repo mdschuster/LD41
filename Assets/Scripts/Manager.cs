@@ -71,15 +71,16 @@ public class Manager : MonoBehaviour {
     }
 
     public void movePaddle() {
-        if (input == null) {
+        if (input == null || input=="") {
             return;
         }
         for (int i = 0; i < theText.Length; i++) {
             if (input.ToLower().Equals(theText[i].text.ToLower())) {
                 Vector3 pos = positionPaddle(i);
                 thePaddle.GetComponent<PaddleMover>().updateTargetPosition(pos);
-
+                theInput.text = "";
                 input = null;
+                
                 return;
             }
         }
