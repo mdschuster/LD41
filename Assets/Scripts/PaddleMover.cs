@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PaddleMover : MonoBehaviour {
+public class PaddleMover : MonoBehaviour, VelocityModifier {
 
     public bool isAnimating;
     Vector3 targetPosition;
@@ -34,5 +34,12 @@ public class PaddleMover : MonoBehaviour {
     public void updateTargetPosition(Vector3 targetPos) {
         targetPosition = targetPos;
         isAnimating = true;
+    }
+
+    public float getVelMod() {
+        return 1f;
+    }
+    public Vector3 addVel() {
+        return vel;
     }
 }

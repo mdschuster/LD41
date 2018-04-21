@@ -8,6 +8,7 @@ public class Manager : MonoBehaviour {
     GameObject textGrid;
     GameObject thePaddle;
     InputField theInput;
+    GameObject theBall;
     Text[] theText;
     int prevH;
     int prevW;
@@ -26,6 +27,7 @@ public class Manager : MonoBehaviour {
         prevW = Camera.main.pixelWidth;
         textGrid = GameObject.Find("TextGrid");
         thePaddle = GameObject.Find("Paddle");
+        theBall = GameObject.Find("Ball");
         theInput = thePaddle.GetComponentInChildren<InputField>();
         textGrid.GetComponent<GridLayoutGroup>().cellSize = new Vector2(Camera.main.pixelWidth / numWords, Camera.main.pixelHeight / 12f);
         theText = textGrid.GetComponentsInChildren<Text>();
@@ -84,6 +86,20 @@ public class Manager : MonoBehaviour {
                 return;
             }
         }
+
+        if (input.ToLower().Equals("faster")) {
+            theBall.GetComponent<Mover>().speed++;
+            theInput.text = "";
+            input = null;
+            return;
+        }
+        if (input.ToLower().Equals("slower")) {
+            theBall.GetComponent<Mover>().speed--;
+            theInput.text = "";
+            input = null;
+            return;
+        }
+
         //for they typed the wrong thing!
         input = null;
 

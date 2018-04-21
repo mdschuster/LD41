@@ -7,8 +7,8 @@ public class Mover : MonoBehaviour {
     public Vector3 vel;
     private Manager theManager;
     public GameObject thePaddle;
-    private float speed;
-    private float shift = 0.1f;
+    public float speed;
+    private float shift = 0.5f;
 
     // Use this for initialization
     void Start() {
@@ -45,7 +45,8 @@ public class Mover : MonoBehaviour {
     private void move() {
         Vector2 pos = this.transform.position;
         Vector2 newPos = new Vector2(0f, 0f);
-        checkBoundry(pos);
+        //checkBoundry(pos);
+        vel = vel.normalized * speed;
         //x
         newPos.x = pos.x + vel.x * Time.deltaTime;
         //y
@@ -57,42 +58,66 @@ public class Mover : MonoBehaviour {
     private void checkBoundry(Vector2 myPos) {
 
         //Debug.Log(pixScale+" "+myPos);
-        Vector2 pos = Camera.main.WorldToScreenPoint(myPos);
-        if (pos.y <= 0+110) {
+        Vector2 pos = myPos;
+        float c = Manager.unitsPerPixel();
+        if (pos.y < 0 + 110 * c) {
             vel = Vector3.Reflect(vel, Vector3.up);
-            pos.y =110+shift;
-        } else if (pos.y >= Camera.main.pixelHeight - this.transform.localScale.y/2f*Manager.pixelsPerUnit()) {
+            pos.y =110*c+shift;
+            Debug.Log(vel + " " + pos+" 1 "+110*c);
+        } else if (pos.y > Camera.main.pixelHeight*c - this.transform.localScale.y/2f) {
             vel = Vector3.Reflect(vel, Vector3.down);
             //vel.y = -vel.y;
-            pos.y = Camera.main.pixelHeight - this.transform.localScale.y / 2f * Manager.pixelsPerUnit()+shift; 
-        } else if (pos.x <= 0+ this.transform.localScale.y / 2f * Manager.pixelsPerUnit()) {
+            pos.y = Camera.main.pixelHeight*c - this.transform.localScale.y / 2f+shift;
+            Debug.Log(vel + " " + pos + " 2");
+
+        } else if (pos.x < 0+ this.transform.localScale.y / 2f) {
             vel = Vector3.Reflect(vel, Vector3.right);
             //vel.x = -vel.x;
-            pos.x = this.transform.localScale.y / 2f * Manager.pixelsPerUnit()+shift; 
-        } else if (pos.x >= Camera.main.pixelWidth - this.transform.localScale.x/2f * Manager.pixelsPerUnit()) {
+            pos.x = this.transform.localScale.y / 2f+shift;
+            Debug.Log(vel + " " + pos + " 3");
+
+        } else if (pos.x > Camera.main.pixelWidth*c - this.transform.localScale.x/2f) {
             vel = Vector3.Reflect(vel, Vector3.left);
-            pos.x = Camera.main.pixelWidth - this.transform.localScale.x / 2f * Manager.pixelsPerUnit()+shift;
+            pos.x = Camera.main.pixelWidth*c - this.transform.localScale.x / 2f+shift;
+            Debug.Log(vel + " " + pos + " 4");
+
             //vel.x = -vel.x;
             // pos.x = Camera.main.pixelWidth - this.transform.localScale.x / 2f * Manager.pixelsPerUnit();
         }
         this.transform.position = pos;
     }
 
+    //FIXME something is still up with the collisions and bound checks
     void OnCollisionEnter(Collision other) {
-        Debug.Log("Hit");
-        vel = Vector3.Reflect(vel, other.contacts[0].normal);
+        vel = Vector3.Reflect(vel, -other.contacts[0].normal);
         Vector3 pos = this.transform.position;
-        pos += other.contacts[0].normal*shift;
+        //pos += other.contacts[0].normal*shift;
+        //apply velocity modifier
+        float velMod = other.gameObject.GetComponent<VelocityModifier>().getVelMod();
+        Vector3 addVel = other.gameObject.GetComponent<VelocityModifier>().addVel();
+        vel = vel.normalized * speed * velMod + addVel;
+
+        if(vel.normalized.magnitude<speed) {
+            vel = vel.normalized * speed;
+        }
+
         this.transform.position = pos;
-        if (!other.gameObject.Equals(thePaddle)) { 
+        if (!other.gameObject.Equals(thePaddle) && other.gameObject.tag!="Boundry") { 
             Destroy(other.gameObject);
         }
+        if (other.gameObject.Equals(thePaddle)) {
+            Debug.Log("Paddle Hit");
+        }
+    }
+
+    void OnCollisionExit(Collision other) {
+        Debug.Log("exit");
     }
 
     void OnCollisionStay(Collision other) {
         Debug.Log("stay");
-        Vector3 pos = this.transform.position;
-        pos += other.contacts[0].normal * shift;
-        this.transform.position = pos;
+        //Vector3 pos = this.transform.position;
+        //pos += other.contacts[0].normal * 0.1f;
+        //this.transform.position = pos;
     }
 }
