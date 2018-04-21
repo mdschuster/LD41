@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Block : MonoBehaviour, VelocityModifier {
 
-    public float velMod = 0.5f;
+    public float velMod = 0.75f;
 	// Use this for initialization
 	void Start () {
 		

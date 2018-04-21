@@ -8,7 +8,7 @@ public class Grid : MonoBehaviour {
     public GameObject blockPrefab;
     int numBlocks;
     int cols=6;
-    int rows=1;
+    int rows=2;
 
     // Use this for initialization
     void Start () {
@@ -43,6 +43,7 @@ public class Grid : MonoBehaviour {
 
     public void arrange() {
         float colWidth = Camera.main.pixelWidth / (cols*1.0f+6f);
+        float rowWidth = blocks[0].transform.localScale.y + 0.1f;
         Vector3 blockScale = this.transform.localScale;
         blockScale.x = colWidth * Manager.unitsPerPixel()/1.5f;
         for (int j = 0; j < rows; j++) {
@@ -50,7 +51,7 @@ public class Grid : MonoBehaviour {
                 GameObject theBlock = blocks[j * cols + i];
                 theBlock.transform.localScale = blockScale;
                 float xpos = ((i - cols / 2f) * colWidth) * Manager.unitsPerPixel()+theBlock.transform.localScale.x/2f;
-                float ypos=4f;
+                float ypos = ((j - rows / 2f+4f) * rowWidth) + theBlock.transform.localScale.y / 2f;
                 Vector2 pos = new Vector2(xpos, ypos);
                 if (j * cols + i >= numBlocks) return;
                 theBlock.transform.position = pos;

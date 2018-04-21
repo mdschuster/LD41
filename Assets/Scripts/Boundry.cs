@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Boundry : MonoBehaviour, VelocityModifier {
 
-    private float velMod = 0.5f;
+    private float velMod = 0.75f;
 	// Use this for initialization
 	void Start () {
 		

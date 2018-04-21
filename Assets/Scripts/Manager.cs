@@ -22,7 +22,7 @@ public class Manager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-        currentPhase = Phases.BALL_MOVING;
+        currentPhase = Phases.BALL_ATTACHED;
         prevH = Camera.main.pixelHeight;
         prevW = Camera.main.pixelWidth;
         textGrid = GameObject.Find("TextGrid");
