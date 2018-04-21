@@ -9,6 +9,7 @@ public class Manager : MonoBehaviour {
     GameObject thePaddle;
     InputField theInput;
     GameObject theBall;
+    GameObject theBlockGrid;
     Text[] theText;
     GameObject goLives;
     GameObject goScore;
@@ -19,6 +20,7 @@ public class Manager : MonoBehaviour {
     bool sizeFlag = true;
     string input = null;
     static float numWords = 4;
+    public static int level;
 
     public enum Phases {BALL_ATTACHED, BALL_MOVING, PAUSED};
     public Phases currentPhase = new Phases();
@@ -26,6 +28,7 @@ public class Manager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
+        level = 3;
         currentPhase = Phases.BALL_ATTACHED;
         prevH = Camera.main.pixelHeight;
         prevW = Camera.main.pixelWidth;
@@ -34,6 +37,7 @@ public class Manager : MonoBehaviour {
         theBall = GameObject.Find("Ball");
         goLives = GameObject.Find("Lives");
         goScore = GameObject.Find("Score");
+        theBlockGrid = GameObject.Find("BlockGrid");
 
         theInput = thePaddle.GetComponentInChildren<InputField>();
         textGrid.GetComponent<GridLayoutGroup>().cellSize = new Vector2(Camera.main.pixelWidth / numWords, Camera.main.pixelHeight / 12f);
@@ -54,6 +58,7 @@ public class Manager : MonoBehaviour {
 
         goLives.GetComponent<Text>().text = "Lives: " + lives;
         goScore.GetComponent<Text>().text = "Score: " + score;
+        theBlockGrid.GetComponent<Grid>().setup();
 
     }
 
@@ -154,7 +159,11 @@ public class Manager : MonoBehaviour {
         return lives;
     }
 
-
+    public void levelUp() {
+        if (theBlockGrid.transform.childCount == 0) { 
+            level = level + 1;
+        }
+    }
 
     public static float unitsPerPixel() {
         var p1 = Camera.main.ScreenToWorldPoint(Vector3.zero);
@@ -165,4 +174,37 @@ public class Manager : MonoBehaviour {
     public static float pixelsPerUnit() {
         return 1 / unitsPerPixel();
     }
+
+    //HACK maybe put this somewhere else
+    public static int[] loadLevelLayout() {
+        int[] cols=null;
+        if (level == 1) {
+            cols = new int[4];
+            cols[0] = 5;
+            cols[1] = 5;
+            cols[2] = 5;
+            cols[3] = 5;
+        }
+        if (level == 2) {
+            cols = new int[4];
+            cols[0] = 6;
+            cols[1] = 6;
+            cols[2] = 2;
+            cols[3] = 6;
+        }
+        if (level == 3) {
+            cols = new int[5];
+            cols[0] = 7;
+            cols[1] = 2;
+            cols[2] = 2;
+            cols[3] = 7;
+            cols[3] = 5;
+        }
+        if (cols == null){
+            //something went wrong
+            Debug.LogError("Level Load Error: Level Not Found");
+        }
+        return cols;
+    }
+
 }

@@ -8,7 +8,6 @@ public class Mover : MonoBehaviour {
     private Manager theManager;
     public GameObject thePaddle;
     public float speed;
-    private float shift = 0.5f;
 
     // Use this for initialization
     void Start() {
@@ -121,7 +120,10 @@ public class Mover : MonoBehaviour {
         if (other.gameObject.Equals(GameObject.Find("Bottom"))) {
             //TODO implement death
             theManager.updateLives(-1);
-            Debug.Log("killed");
+            if (theManager.getLives() == 0) {
+                //TODO gameover
+                Debug.Log("Game Over Man");
+            }
             theManager.currentPhase = Manager.Phases.BALL_ATTACHED;
         }
     }

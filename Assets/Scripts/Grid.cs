@@ -7,16 +7,11 @@ public class Grid : MonoBehaviour {
     GameObject[] blocks;
     public GameObject blockPrefab;
     int numBlocks;
-    int cols=6;
-    int rows=2;
+    int rows;
+    int[] cols;
 
     // Use this for initialization
     void Start () {
-
-        setup();
-
-
-
 
 	}
 	
@@ -27,12 +22,18 @@ public class Grid : MonoBehaviour {
 
     public void setup() {
 
-        for (int i = 0; i < cols*rows; i++) {
+        cols = Manager.loadLevelLayout();
+        rows = cols.Length;
+
+        int numBlocks = 0;
+        for (int i = 0; i < cols.Length; i++) {
+            numBlocks += cols[i];
+        }
+        for (int i = 0; i < numBlocks; i++) {
             GameObject temp = Instantiate(blockPrefab);
             temp.transform.parent = this.transform;
         }
 
-        numBlocks = this.transform.childCount;
         blocks = new GameObject[numBlocks];
         for (int i = 0; i < numBlocks; i++) {
             blocks[i] = this.transform.GetChild(i).gameObject;
@@ -42,35 +43,32 @@ public class Grid : MonoBehaviour {
     }
 
     public void arrange() {
-        float colWidth = Camera.main.pixelWidth / (cols*1.0f+6f);
+
+
         float rowWidth = blocks[0].transform.localScale.y + 0.1f;
         Vector3 blockScale = this.transform.localScale;
-        blockScale.x = colWidth * Manager.unitsPerPixel()/1.5f;
+        int numBlocks = 0;
+        for (int i = 0; i < cols.Length; i++) {
+            numBlocks += cols[i];
+        }
+        int count = 0;
         for (int j = 0; j < rows; j++) {
-            for (int i = 0; i < cols; i++) {
-                GameObject theBlock = blocks[j * cols + i];
+            float colWidth = Camera.main.pixelWidth / (cols[j] * 1.0f + 6f);
+            blockScale.x = colWidth * Manager.unitsPerPixel() / 1.5f;
+            for (int i = 0; i < cols[j]; i++) {
+                GameObject theBlock = blocks[count];
                 theBlock.transform.localScale = blockScale;
-                float xpos = ((i - cols / 2f) * colWidth) * Manager.unitsPerPixel()+theBlock.transform.localScale.x/2f;
+                float xpos = ((i - cols[j] / 2f) * colWidth) * Manager.unitsPerPixel()+theBlock.transform.localScale.x/2f;
                 float ypos = ((j - rows / 2f+4f) * rowWidth) + theBlock.transform.localScale.y / 2f;
                 Vector2 pos = new Vector2(xpos, ypos);
-                if (j * cols + i >= numBlocks) return;
+                if (count >= numBlocks) return;
                 theBlock.transform.position = pos;
+                count++;
 
             }
         }
     }
 
-
-
-    public int Cols {
-        get {
-            return cols;
-        }
-
-        set {
-            cols = value;
-        }
-    }
 
     public int Rows {
         get {
@@ -79,6 +77,16 @@ public class Grid : MonoBehaviour {
 
         set {
             rows = value;
+        }
+    }
+
+    public int[] Cols {
+        get {
+            return cols;
+        }
+
+        set {
+            cols = value;
         }
     }
 }
