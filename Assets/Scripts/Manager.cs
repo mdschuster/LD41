@@ -11,6 +11,7 @@ public class Manager : MonoBehaviour {
     public GameObject theBall;
     GameObject theBlockGrid;
     Text[] theText;
+    string[] words;
     GameObject goLives;
     GameObject goScore;
     public Text centerText;
@@ -52,10 +53,13 @@ public class Manager : MonoBehaviour {
         theInput = thePaddle.GetComponentInChildren<InputField>();
         textGrid.GetComponent<GridLayoutGroup>().cellSize = new Vector2(Camera.main.pixelWidth / numWords, Camera.main.pixelHeight / 12f);
         theText = textGrid.GetComponentsInChildren<Text>();
-        theText[0].text = "One";
+
+        setupWordList();
+
+        theText[0].text = getWord();
         theText[1].text = "";
         theText[2].text = "";
-        theText[3].text = "Four";
+        theText[3].text = getWord();
 
 
 
@@ -158,9 +162,11 @@ public class Manager : MonoBehaviour {
         Vector3 pos=this.transform.position;
         if (input.ToLower().Equals(theText[0].text.ToLower())) {
             pos = positionPaddle(0);
+            theText[0].text = getWord();
         }
         if (input.ToLower().Equals(theText[theText.Length-1].text.ToLower())) {
             pos = positionPaddle(theText.Length-1);
+            theText[theText.Length-1].text = getWord();
         }
 
         if (!pos.Equals(this.transform.position)) {
@@ -340,6 +346,147 @@ public class Manager : MonoBehaviour {
             Debug.LogError("Level Load Error: Level Not Found");
         }
         return cols;
+    }
+
+
+
+    private void setupWordList() {
+        words =new string[]{
+            "hello",
+            "goodby",
+            "federation",
+            "Boston",
+            "Wyoming",
+            "zero",
+            "steak",
+            "hazel",
+            "foggy",
+            "saint",
+            "danger",
+            "cypher",
+            "sphere",
+            "ripost",
+            "montra",
+            "refine",
+            "inject",
+            "usable",
+            "insure",
+            "emboss",
+            "defect",
+            "denier",
+            "mention",
+            "cartoon",
+            "urging",
+            "equine",
+            "maximal",
+            "plywood",
+            "venison",
+            "enhance",
+            "hickory",
+            "vanilla",
+            "auditor",
+            "bear",
+            "peer",
+            "meow",
+            "mana",
+            "jowl",
+            "rein",
+            "crow",
+            "town",
+            "ursa",
+            "papa",
+            "card",
+            "main",
+            "ooze",
+            "hang",
+            "howl",
+            "Portugal",
+            "provoked",
+            "talented",
+            "executor",
+            "teen",
+            "teenaged",
+            "depriver",
+            "overjoyed",
+            "jackfruit",
+            "barrister",
+            "chickadee",
+            "spaghetti",
+            "reinhardt",
+            "sleet",
+            "fatty",
+            "refer",
+            "kabab",
+            "digit",
+            "swiss",
+            "ochre",
+            "weave",
+            "evaporate",
+            "brace",
+            "added",
+            "lover",
+            "moody",
+            "ozone",
+            "crabby",
+            "creed",
+            "drool",
+            "oasis",
+            "pupil",
+            "grown",
+            "abandon",
+            "nine",
+            "gang",
+            "flux",
+            "star",
+            "start",
+            "finish",
+            "flaw",
+            "reek",
+            "almost",
+            "golf",
+            "gulf",
+            "gulp",
+            "mill",
+            "cuts",
+            "brown",
+            "orange",
+            "pink",
+            "green",
+            "cyan",
+            "black",
+            "apple",
+            "pear",
+            "tree",
+            "bush",
+            "shrub",
+            "flower",
+            "daisy",
+            "pine",
+            "physics",
+            "biology",
+            "nuclear",
+            "computer",
+            "ludum",
+            "dare",
+            "monitor",
+            "speaker",
+            "mouse",
+            "horse",
+            "headphones",
+            "phone",
+            "charger",
+            "cord",
+            "plate",
+            "bowl",
+            "book",
+            "manual"
+
+        };
+    }
+
+    private string getWord() {
+        int rand = Random.Range(0, words.Length);
+        return words[rand];
     }
 
 }
