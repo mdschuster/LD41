@@ -227,7 +227,7 @@ public class Manager : MonoBehaviour {
             return;
         }
         level = level + 1;
-        if (level > 3) {
+        if (level > 10) {
             level = 1;
         }
         centerText.text="Level Complete \n Press Space To Continue...";
@@ -280,6 +280,59 @@ public class Manager : MonoBehaviour {
             cols[1] = 2;
             cols[2] = 2;
             cols[3] = 1;
+            cols[4] = 5;
+        }
+        if (level == 4) {
+            cols = new int[6];
+            cols[0] = 2;
+            cols[1] = 3;
+            cols[2] = 4;
+            cols[3] = 5;
+            cols[4] = 6;
+            cols[4] = 2;
+        }
+        if (level == 5) {
+            cols = new int[5];
+            cols[0] = 5;
+            cols[1] = 5;
+            cols[2] = 5;
+            cols[3] = 1;
+            cols[4] = 3;
+        }
+        if (level == 6) {
+            cols = new int[4];
+            cols[0] = 6;
+            cols[1] = 1;
+            cols[2] = 6;
+            cols[3] = 2;
+        }
+        if (level == 7) {
+            cols = new int[3];
+            cols[0] = 6;
+            cols[1] = 5;
+            cols[2] = 6;
+        }
+        if (level == 8) {
+            cols = new int[5];
+            cols[0] = 2;
+            cols[1] = 2;
+            cols[2] = 2;
+            cols[3] = 2;
+            cols[4] = 6;
+        }
+        if (level == 9) {
+            cols = new int[4];
+            cols[0] = 1;
+            cols[1] = 1;
+            cols[2] = 6;
+            cols[3] = 7;
+        }
+        if (level == 10) {
+            cols = new int[5];
+            cols[0] = 1;
+            cols[1] = 2;
+            cols[2] = 3;
+            cols[3] = 4;
             cols[4] = 5;
         }
         if (cols == null){
