@@ -47,10 +47,10 @@ public class Manager : MonoBehaviour {
         theInput = thePaddle.GetComponentInChildren<InputField>();
         textGrid.GetComponent<GridLayoutGroup>().cellSize = new Vector2(Camera.main.pixelWidth / numWords, Camera.main.pixelHeight / 12f);
         theText = textGrid.GetComponentsInChildren<Text>();
-        theText[0].text = "Zero";
-        theText[1].text = "One";
-        theText[2].text = "Two";
-        theText[3].text = "Three";
+        theText[0].text = "One";
+        theText[1].text = "";
+        theText[2].text = "";
+        theText[3].text = "Four";
 
 
 
@@ -131,16 +131,20 @@ public class Manager : MonoBehaviour {
             return;
         }
         input = input.Trim();
-        for (int i = 0; i < theText.Length; i++) {
-            if (input.ToLower().Equals(theText[i].text.ToLower())) {
-                Vector3 pos = positionPaddle(i);
-                thePaddle.GetComponent<PaddleMover>().updateTargetPosition(pos);
-                theInput.text = "";
-                input = null;
-                
-                return;
-            }
+        Vector3 pos=this.transform.position;
+        if (input.ToLower().Equals(theText[0].text.ToLower())) {
+            pos = positionPaddle(0);
         }
+        if (input.ToLower().Equals(theText[theText.Length-1].text.ToLower())) {
+            pos = positionPaddle(theText.Length-1);
+        }
+
+        if (!pos.Equals(this.transform.position)) {
+            thePaddle.GetComponent<PaddleMover>().updateTargetPosition(pos);
+            theInput.text = "";
+            input = null;
+            return;
+        }     
 
         if (input.ToLower().Equals("faster")) {
             theBall.GetComponent<Mover>().speed++;
@@ -237,11 +241,11 @@ public class Manager : MonoBehaviour {
         }
         if (level == 3) {
             cols = new int[5];
-            cols[0] = 7;
+            cols[0] = 5;
             cols[1] = 2;
             cols[2] = 2;
-            cols[3] = 7;
-            cols[3] = 5;
+            cols[3] = 1;
+            cols[4] = 5;
         }
         if (cols == null){
             //something went wrong

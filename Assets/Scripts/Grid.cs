@@ -46,19 +46,20 @@ public class Grid : MonoBehaviour {
 
 
         float rowWidth = blocks[0].transform.localScale.y + 0.1f;
-        Vector3 blockScale = this.transform.localScale;
         int numBlocks = 0;
         for (int i = 0; i < cols.Length; i++) {
             numBlocks += cols[i];
         }
         int count = 0;
         for (int j = 0; j < rows; j++) {
-            float colWidth = Camera.main.pixelWidth / (cols[j] * 1.0f + cols[j]/2f);
-            blockScale.x = colWidth * Manager.unitsPerPixel() / 1.5f;
+            //float colWidth = Camera.main.pixelWidth / (cols[j] * 1.0f);
+            //200 pix with 150 per unit on block sprite (get sprite width below)
+            float spriteWidth=blocks[0].GetComponent<Renderer>().bounds.size.x+0.5f;
+            float colWidth = spriteWidth;
+            float totalWidth = (colWidth) * cols[j];
             for (int i = 0; i < cols[j]; i++) {
                 GameObject theBlock = blocks[count];
-                theBlock.transform.localScale = blockScale;
-                float xpos = ((i - cols[j] / 2f) * colWidth) * Manager.unitsPerPixel()+theBlock.transform.localScale.x/2f;
+                float xpos = (i * colWidth) + spriteWidth/2f-totalWidth/2f ;// -centerShift/2f;// + (theBlock.transform.localScale.x + 0.5f) / 2f-centerShift;
                 float ypos = ((j - rows / 2f+4f) * rowWidth) + theBlock.transform.localScale.y / 2f;
                 Vector2 pos = new Vector2(xpos, ypos);
                 if (count >= numBlocks) return;
