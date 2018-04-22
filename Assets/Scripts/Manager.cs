@@ -8,12 +8,12 @@ public class Manager : MonoBehaviour {
     GameObject textGrid;
     GameObject thePaddle;
     InputField theInput;
-    GameObject theBall;
+    public GameObject theBall;
     GameObject theBlockGrid;
     Text[] theText;
     GameObject goLives;
     GameObject goScore;
-    Text centerText;
+    public Text centerText;
     int score=0;
     int lives=3;
     int prevH;
@@ -23,7 +23,7 @@ public class Manager : MonoBehaviour {
     static float numWords = 4;
     public static int level;
 
-    public enum Phases {BALL_ATTACHED, BALL_MOVING, PAUSED, LEVEL_COMPLETE};
+    public enum Phases {BALL_ATTACHED, BALL_MOVING, PAUSED, LEVEL_COMPLETE,GAME_OVER};
     public Phases currentPhase = new Phases();
     public Phases prevPhase = new Phases();
 
@@ -89,6 +89,25 @@ public class Manager : MonoBehaviour {
                 centerText.text = "";
                 currentPhase = Phases.BALL_ATTACHED;
                 activateInput(true);
+            }
+            return;
+        }
+
+        if(currentPhase == Phases.GAME_OVER) {
+            if (Input.GetKeyUp(KeyCode.Space)) {
+
+                Debug.Log(theBlockGrid.transform.childCount);
+                level = 1;
+                theBlockGrid.GetComponent<Grid>().setup();
+                centerText.text = "";
+                currentPhase = Phases.BALL_ATTACHED;
+                activateInput(true);
+                score = 0;
+                lives = 3;
+                updateScore(0);
+                updateLives(0);
+
+
             }
             return;
         }
@@ -221,6 +240,17 @@ public class Manager : MonoBehaviour {
 
     public static float pixelsPerUnit() {
         return 1 / unitsPerPixel();
+    }
+
+    public void gameOver() {
+        for (int i = 0; i < theBlockGrid.transform.childCount; i++) {
+            Destroy(theBlockGrid.transform.GetChild(i).gameObject);
+        }
+        currentPhase = Manager.Phases.GAME_OVER;
+        centerText.text = "Game Over \n Press Space To Try Again";
+        theBall.GetComponentInChildren<ParticleSystem>().Stop();
+        theBall.GetComponent<Mover>().vel = Vector3.zero;
+        activateInput(false);
     }
 
     //HACK maybe put this somewhere else

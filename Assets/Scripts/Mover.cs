@@ -136,11 +136,11 @@ public class Mover : MonoBehaviour {
 
         }
         if (other.gameObject.Equals(GameObject.Find("Bottom"))) {
-            //TODO implement death
             theManager.updateLives(-1);
             if (theManager.getLives() == 0) {
-                //TODO gameover
+                theManager.gameOver();
                 Debug.Log("Game Over Man");
+                return;
             }
             theManager.currentPhase = Manager.Phases.BALL_ATTACHED;
             this.GetComponentInChildren<ParticleSystem>().Stop();
