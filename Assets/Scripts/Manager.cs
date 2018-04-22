@@ -26,6 +26,7 @@ public class Manager : MonoBehaviour {
     //sound
     public AudioSource source;
     public AudioClip[] bounce;
+    public AudioClip music;
 
     public enum Phases {BALL_ATTACHED, BALL_MOVING, PAUSED, LEVEL_COMPLETE,GAME_OVER};
     public Phases currentPhase = new Phases();
