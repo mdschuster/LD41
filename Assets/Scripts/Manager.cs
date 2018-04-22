@@ -23,6 +23,10 @@ public class Manager : MonoBehaviour {
     static float numWords = 4;
     public static int level;
 
+    //sound
+    public AudioSource source;
+    public AudioClip[] bounce;
+
     public enum Phases {BALL_ATTACHED, BALL_MOVING, PAUSED, LEVEL_COMPLETE,GAME_OVER};
     public Phases currentPhase = new Phases();
     public Phases prevPhase = new Phases();

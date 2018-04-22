@@ -122,6 +122,20 @@ public class Mover : MonoBehaviour {
             vel = vel.normalized * speed;
         }
 
+
+        //sounds
+        if (other.gameObject.Equals(thePaddle)) {
+            theManager.source.clip = theManager.bounce[1];
+            theManager.source.Play();
+        } else if (other.gameObject.tag == "Boundry") {
+            theManager.source.clip = theManager.bounce[0];
+            theManager.source.Play();
+        } else {
+            theManager.source.clip = theManager.bounce[2];
+            theManager.source.Play();
+        }
+
+
         //don't go over max speed
         if (vel.normalized.magnitude<speed) {
             vel = vel.normalized * speed;

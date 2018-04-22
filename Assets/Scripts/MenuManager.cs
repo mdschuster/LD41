@@ -5,6 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour {
 
+    public AudioSource source;
+    public AudioClip hover;
+    public AudioClip bounce;
+
 	// Use this for initialization
 	void Start () {
         //Debug.Log(Camera.main.pixelHeight + " " + Camera.main.pixelWidth);
@@ -19,5 +23,10 @@ public class MenuManager : MonoBehaviour {
 
     public void onClickExit() {
         Application.Quit();
+    }
+
+    public void onMouseOver() {
+        source.clip = hover;
+        source.Play();
     }
 }

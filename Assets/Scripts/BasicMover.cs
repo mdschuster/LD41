@@ -6,11 +6,13 @@ public class BasicMover : MonoBehaviour {
 
     public Vector3 vel;
     public float speed;
+    public MenuManager theManager;
 
     // Use this for initialization
     void Start() {
         speed = 10f;
         vel = new Vector3(0.9f, 1.4f, 0f).normalized * speed;
+
     }
 
     // Update is called once per frame
@@ -77,6 +79,9 @@ public class BasicMover : MonoBehaviour {
         }
 
         this.transform.position = pos;
+
+        theManager.source.clip = theManager.bounce;
+        theManager.source.Play();
 
     }
 
