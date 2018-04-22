@@ -9,8 +9,8 @@ public class BasicMover : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-        speed = 7f;
-        vel = new Vector3(1f, 1f, 0f).normalized * speed;
+        speed = 10f;
+        vel = new Vector3(0.9f, 1.4f, 0f).normalized * speed;
     }
 
     // Update is called once per frame
@@ -50,13 +50,24 @@ public class BasicMover : MonoBehaviour {
         Vector3 addVel = other.gameObject.GetComponent<VelocityModifier>().addVel();
         vel = vel.normalized * speed * velMod + addVel;
 
+        //random kick
+        int rand1 = Random.Range(0, 2);
+        int rand2 = Random.Range(1, 11);
+
+        if (rand1 == 0) {
+            vel.y *= rand2;
+        } else {
+            vel.x *= rand2;
+        }
+        vel = vel.normalized * speed;
+
         if (Mathf.Abs(vel.normalized.y) < 0.1) {
             //kick it!
-            vel.y *= 10f;
+            vel.y *= 100f;
             vel = vel.normalized * speed;
         } else if (Mathf.Abs(vel.normalized.x) < 0.1) {
             //kick it!
-            vel.x *= 10f;
+            vel.x *= 100f;
             vel = vel.normalized * speed;
         }
 
