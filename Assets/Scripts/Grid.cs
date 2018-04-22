@@ -6,6 +6,7 @@ public class Grid : MonoBehaviour {
 
     GameObject[] blocks;
     public GameObject blockPrefab;
+    public Sprite[] s_blocks;
     int numBlocks;
     int rows;
     int[] cols;
@@ -65,6 +66,8 @@ public class Grid : MonoBehaviour {
                 if (count >= numBlocks) return;
                 theBlock.transform.position = pos;
                 count++;
+                int rand = Random.Range(0, s_blocks.Length);
+                theBlock.GetComponent<SpriteRenderer>().sprite=s_blocks[rand];
 
             }
         }
